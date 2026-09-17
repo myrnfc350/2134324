@@ -12,6 +12,11 @@ on:
   watch:
     types: [started]
 
+# The job commits the refreshed token, so the GITHUB_TOKEN needs write access.
+# Without this the push is rejected with "Permission ... denied to github-actions[bot]".
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,13 +38,14 @@ jobs:
         TENANT_ID: ${{ secrets.TENANT_ID }}
       run: |
         python update.py
-    - name: Commit
+    - name: Commit and push
       run: |
         git config --global user.email actions@github.com
         git config --global user.name "github-actions[bot]"
-        git add .
-        git commit -m "update new app token" -a
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        git add refresh.txt
+        if git diff --cached --quiet; then
+          echo "No token change, nothing to commit"
+          exit 0
+        fi
+        git commit -m "update new app token"
+        git push origin HEAD:main
