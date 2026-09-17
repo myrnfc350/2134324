@@ -39,18 +39,18 @@ def main():
         }
     global cnt
     
-    print('此次运行开始时间为:', time.asctime(time.localtime(time.time())))
+    print('Run started at:', time.asctime(time.localtime(time.time())))
     
     for index in random.sample(range(len(url_list)), len(url_list)):
         try:
             res = requests.get(url_list[index], headers=headers)
             if res.status_code == 200:
                 cnt += 1
-                print(f"url-{index+1:02d} 共调用成功{cnt}次")
+                print(f"url-{index+1:02d} ok, {cnt} successful call(s) so far")
             else:
-                print(f"url-{index+1:02d} 调用失败: {res.status_code}")
+                print(f"url-{index+1:02d} request failed: {res.status_code}")
         except Exception as e:
-            print(f"url-{index+1:02d} 调用失败: {e}")
+            print(f"url-{index+1:02d} request failed: {e}")
     
 
 if __name__ == "__main__":

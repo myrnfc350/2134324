@@ -30,5 +30,6 @@ jobs:
       env:
         CONFIG_ID: ${{ secrets.CONFIG_ID }}
         CONFIG_KEY: ${{ secrets.CONFIG_KEY }}
+        TENANT_ID: ${{ secrets.TENANT_ID }}
       run: |
         python main.py

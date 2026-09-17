@@ -5,11 +5,16 @@ import os
 CONFIG_ID = os.environ['CONFIG_ID']
 CONFIG_KEY = os.environ['CONFIG_KEY']
 
+# Tenant configuration: defaults to 'common' (multi-tenant) when unset or blank.
+# A single-tenant app must set this to its tenant ID (GUID) or domain,
+# for example contoso.onmicrosoft.com
+TENANT_ID = (os.environ.get('TENANT_ID') or '').strip() or 'common'
+
 
 def gettoken(refresh_token: str) -> dict:
-    '''返回字典包含 refresh_token, access_token'''
+    '''Return a dict containing refresh_token and access_token'''
     
-    url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    url = f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token'
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
